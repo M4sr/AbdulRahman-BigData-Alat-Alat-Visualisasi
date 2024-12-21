@@ -457,6 +457,63 @@
                 width: 85%;
             }
         }
+
+        /* Style untuk video container dan video */
+        .tool-vid {
+            width: 100%;
+            aspect-ratio: 16/9;
+            border-radius: 12px;
+            object-fit: cover;
+            transition: transform var(--transition-speed);
+        }
+
+        .visualization-examples {
+            position: relative;
+            width: 100%;
+            margin: 1.5rem 0;
+            overflow: hidden;
+            border-radius: 12px;
+        }
+
+        /* Hover effect */
+        .visualization-examples:hover .tool-vid {
+            transform: scale(1.02);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .tool-vid {
+                border-radius: 8px;
+                aspect-ratio: 4/2; /* Lebih compact untuk mobile */
+            }
+
+            .visualization-examples {
+                margin: 1rem 0;
+                border-radius: 8px;
+            }
+        }
+
+        /* Untuk perangkat sangat kecil */
+        @media (max-width: 360px) {
+            .tool-vid {
+                aspect-ratio: 1/1; /* Square untuk layar sangat kecil */
+            }
+        }
+
+        /* Untuk tablet dan desktop kecil */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .tool-vid {
+                aspect-ratio: 16/9;
+            }
+        }
+
+        /* Fix untuk iOS Safari */
+        @supports (-webkit-touch-callout: none) {
+            .tool-vid {
+                height: 56.25vw; /* Fallback untuk iOS jika aspect-ratio tidak didukung */
+                max-height: 500px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -728,9 +785,13 @@
             <h2>7. Plotly</h2>
             <p>Plotly adalah library visualisasi data open-source yang mendukung multiple programming languages. Dikembangkan oleh Plotly Inc., library ini memungkinkan pembuatan visualisasi data interaktif yang dapat digunakan di web browser. Plotly menggabungkan kemampuan visualisasi modern dengan dukungan untuk berbagai bahasa pemrograman populer, menjadikannya pilihan serbaguna untuk proyek data science dan analitik.</p>
             <div class="visualization-examples">
-                <a href="https://plotly.com/python/" target="_blank">
-                    <video src="https://plotly-marketing-website-2.cdn.prismic.io/plotly-marketing-website-2/6624dacf-d857-4361-abc0-8f8d7938415d_website_landing_video.mp4" alt="Contoh Plotly" class="tool-image" autoplay loop muted></video>
-                </a>
+                <video src="https://plotly-marketing-website-2.cdn.prismic.io/plotly-marketing-website-2/6624dacf-d857-4361-abc0-8f8d7938415d_website_landing_video.mp4" 
+                       class="tool-vid"
+                       autoplay 
+                       loop 
+                       muted 
+                       playsinline>
+                </video>
             </div>
             <p><em>Sumber gambar: <a href="https://plotly.com/" target="_blank" class="source-link">Plotly Official Website</a></em></p>
             <p>Fitur utama:</p>
