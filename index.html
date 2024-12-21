@@ -514,9 +514,95 @@
                 max-height: 500px;
             }
         }
+
+        /* Lightbox styles */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 10000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .lightbox.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .lightbox-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90vh;
+            margin: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .lightbox-content img,
+        .lightbox-content video {
+            max-width: 100%;
+            max-height: 90vh;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .lightbox.active .lightbox-content img,
+        .lightbox.active .lightbox-content video {
+            transform: scale(1);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
+            z-index: 10001;
+            transition: transform 0.3s ease;
+        }
+
+        .close-btn:hover {
+            transform: scale(1.2);
+        }
+
+        /* Tambahkan cursor pointer untuk gambar dan video yang bisa di-klik */
+        .visualization-examples img,
+        .visualization-examples video {
+            cursor: pointer;
+        }
+
+        /* Animation */
+        @keyframes zoomIn {
+            from { transform: scale(0.3); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .lightbox-content.animate {
+            animation: zoomIn 0.3s ease forwards;
+        }
     </style>
 </head>
 <body>
+    <div id="lightbox" class="lightbox">
+        <span class="close-btn">&times;</span>
+        <div class="lightbox-content">
+            <img id="lightbox-img" src="" alt="Preview">
+            <video id="lightbox-video" controls>
+                <source src="" type="video/mp4">
+            </video>
+        </div>
+    </div>
+
     <div class="container">
         <div class="identity-card fade-in">
             <div class="identity-info">
@@ -1239,6 +1325,61 @@
                     card.style.transform = `translateY(${yPos}px)`;
                 });
             }, { passive: true });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            const lightboxVideo = document.getElementById('lightbox-video');
+            const closeBtn = document.querySelector('.close-btn');
+
+            // Fungsi untuk menampilkan lightbox
+            function showLightbox(element) {
+                if (element.tagName.toLowerCase() === 'video') {
+                    lightboxVideo.src = element.src;
+                    lightboxVideo.style.display = 'block';
+                    lightboxImg.style.display = 'none';
+                } else {
+                    lightboxImg.src = element.src;
+                    lightboxImg.style.display = 'block';
+                    lightboxVideo.style.display = 'none';
+                }
+                lightbox.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+
+            // Fungsi untuk menutup lightbox
+            function closeLightbox() {
+                lightbox.classList.remove('active');
+                document.body.style.overflow = '';
+                setTimeout(() => {
+                    lightboxVideo.src = '';
+                    lightboxImg.src = '';
+                }, 300);
+            }
+
+            // Event listeners untuk gambar dan video
+            document.querySelectorAll('.visualization-examples img, .visualization-examples video').forEach(element => {
+                element.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    showLightbox(this);
+                });
+            });
+
+            // Event listeners untuk menutup lightbox
+            closeBtn.addEventListener('click', closeLightbox);
+            lightbox.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeLightbox();
+                }
+            });
+
+            // Event listener untuk tombol ESC
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeLightbox();
+                }
+            });
         });
     </script>
 </body>
