@@ -22,14 +22,7 @@ Berikut beberapa alat visualisasi yang disorot dalam repositori ini:
 - **D3.js**: Pustaka JavaScript dengan kustomisasi tinggi.
 - **FusionCharts**: Grafik dan peta interaktif.
 - **FineReport**: Membuat laporan data yang profesional.
+- **DLL**
 
 ---
 
-## 📂 Struktur Proyek
-
-```plaintext
-├── data/               # Dataset untuk contoh visualisasi
-├── scripts/            # Kode sumber alat visualisasi
-├── examples/           # Contoh implementasi visualisasi
-├── docs/               # Dokumentasi alat
-└── README.md           # Dokumentasi utama
