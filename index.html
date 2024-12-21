@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ABDUL RAHMAN - Alat Visualisasi Data</title>
+    <meta name="description" content="Panduan lengkap alat visualisasi data: Tableau, Power BI, Google Charts, dan D3.js">
+    <meta name="theme-color" content="#3498db">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* Reset dan variabel CSS */
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --transition-speed: 0.3s;
+            --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        /* Style dasar yang diperbarui */
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.8;
+            margin: 0;
+            padding: 0;
+            transition: background-color var(--transition-speed), color var(--transition-speed);
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header yang lebih menarik */
+        h1 {
+            font-size: 3rem;
+            margin: 3rem 0 4rem;
+            text-align: center;
+            position: relative;
+            padding-bottom: 1rem;
+            font-weight: 800;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: var(--primary-color);
+            border-radius: 2px;
+        }
+
+        /* Card yang lebih modern */
+        .tool-card {
+            border: none;
+            border-radius: 16px;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            background: #fff;
+            box-shadow: var(--card-shadow);
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+        }
+
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Gambar yang lebih menarik */
+        .visualization-examples img {
+            border-radius: 12px;
+            transition: transform var(--transition-speed);
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+        }
+
+        .visualization-examples a:hover img {
+            transform: scale(1.02);
+        }
+
+        /* List yang lebih modern */
+        ul {
+            padding-left: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        li {
+            margin: 0.8rem 0;
+            position: relative;
+            line-height: 1.8;
+        }
+
+        /* Link yang lebih menarik */
+        .reference-link, .source-link {
+            padding: 0.6rem 0;
+            transition: color var(--transition-speed);
+            position: relative;
+            display: inline-block;
+            font-size: 1.1rem;
+        }
+
+        .reference-link::after, .source-link::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: currentColor;
+            transform: scaleX(0);
+            transition: transform var(--transition-speed);
+        }
+
+        .reference-link:hover::after, .source-link:hover::after {
+            transform: scaleX(1);
+        }
+
+        /* Tombol tema yang lebih menarik */
+        .theme-toggle {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 70px;
+            height: 70px;
+            border-radius: 30px;
+            font-size: 28px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            background-color: rgba(52, 152, 219, 0.9);
+            border: none;
+            cursor: pointer;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: all var(--transition-speed);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(360deg) scale(1.1);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+        }
+
+        /* Tambahkan style khusus untuk dark theme */
+        .dark-theme .theme-toggle {
+            background-color: rgba(96, 165, 250, 0.9);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .dark-theme .theme-toggle:hover {
+            background-color: rgba(59, 130, 246, 0.9);
+        }
+
+        /* Dark theme yang lebih kontras */
+        body.dark-theme {
+            background-color: #111827;
+            color: #e5e7eb;
+        }
+
+        .dark-theme .tool-card {
+            background-color: #1f2937;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+        }
+
+        .dark-theme h1::after {
+            background: #60a5fa;
+        }
+
+        /* Animasi loading */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .tool-card {
+            animation: fadeIn 0.6s ease-out forwards;
+            opacity: 0;
+        }
+
+        .tool-card:nth-child(1) { animation-delay: 0.1s; }
+        .tool-card:nth-child(2) { animation-delay: 0.2s; }
+        .tool-card:nth-child(3) { animation-delay: 0.3s; }
+        .tool-card:nth-child(4) { animation-delay: 0.4s; }
+
+        /* Media Queries untuk responsivitas */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            h2 {
+                font-size: 1.8rem;
+            }
+
+            p, ul, .reference-link, .source-link {
+                font-size: 1rem;
+            }
+
+            .tool-card {
+                padding: 2rem;
+                margin-bottom: 2rem;
+            }
+
+            .theme-toggle {
+                width: 60px;
+                height: 60px;
+                font-size: 24px;
+                bottom: 20px;
+                right: 20px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .container {
+                padding: 3rem;
+            }
+
+            .tool-card {
+                padding: 2.5rem;
+            }
+
+            .container {
+                max-width: 1000px;
+            }
+        }
+
+        /* Style untuk ikon di reference link */
+        .reference-link i {
+            margin-right: 8px;
+            font-size: 1.2em;
+            vertical-align: middle;
+        }
+
+        /* Style khusus untuk link "Kunjungi Website" */
+        .visit-website-link {
+            display: inline-flex;
+            align-items: center;
+            background: var(--primary-color);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .visit-website-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.2);
+        }
+
+        .visit-website-link i {
+            margin-left: 8px;
+        }
+
+        .dark-theme .visit-website-link {
+            background: #60a5fa;
+        }
+
+        /* Style untuk identitas */
+        .identity-card {
+            background: linear-gradient(135deg, var(--primary-color), #2563eb);
+            color: white;
+            padding: 2rem;
+            border-radius: 16px;
+            margin-bottom: 3rem;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+            position: relative;
+            overflow: hidden;
+            isolation: isolate;
+        }
+
+        .identity-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: url('https://i.ibb.co.com/k43JtJY/LOGO-USTI.png');
+            background-size: 40% auto;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0.95;
+            mix-blend-mode: soft-light;
+            z-index: -1;
+        }
+
+        .identity-info {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 1rem 2rem;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .identity-label {
+            font-weight: 500;
+            opacity: 0.9;
+            white-space: nowrap;
+        }
+
+        .identity-value {
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        /* Dark theme adjustment */
+        .dark-theme .identity-card {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .dark-theme .identity-card::after {
+            mix-blend-mode: overlay;
+            opacity: 0.2;
+        }
+
+        /* Responsive adjustment */
+        @media (max-width: 768px) {
+            .identity-card {
+                padding: 1.5rem;
+            }
+
+            .identity-card::before {
+                font-size: 3rem;
+                opacity: 0.1;
+            }
+
+            .identity-info {
+                gap: 0.8rem 1.5rem;
+            }
+        }
+
+        /* Penyesuaian style untuk fade effect */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(50px) scale(0.95);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            filter: blur(5px);
+            will-change: transform, opacity, filter;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            filter: blur(0);
+        }
+
+        /* Efek hover pada card */
+        .tool-card {
+            transform-origin: center;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            perspective: 1000px;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-10px) rotateX(2deg);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Animasi untuk setiap elemen dalam card */
+        .tool-card > * {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .tool-card.visible > * {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Delay bertingkat untuk konten dalam card */
+        .tool-card.visible > *:nth-child(1) { transition-delay: 0.1s; }
+        .tool-card.visible > *:nth-child(2) { transition-delay: 0.2s; }
+        .tool-card.visible > *:nth-child(3) { transition-delay: 0.3s; }
+        .tool-card.visible > *:nth-child(4) { transition-delay: 0.4s; }
+        .tool-card.visible > *:nth-child(5) { transition-delay: 0.5s; }
+
+        /* Efek khusus untuk identity card */
+        .identity-card.fade-in {
+            transform: translateY(30px) scale(0.98);
+            transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .identity-card.visible {
+            transform: translateY(0) scale(1);
+        }
+
+        /* Efek untuk heading */
+        h1.fade-in {
+            transform: translateY(-30px) scale(0.95);
+            transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        h1.visible {
+            transform: translateY(0) scale(1);
+        }
+
+        /* Style untuk vektor dekoratif */
+        .identity-card::before {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            height: 100%;
+            width: 30%;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0,0 L100,0 L100,100 L30,100 C55,70 60,30 0,0' fill='rgba(255,255,255,0.1)'/%3E%3C/svg%3E"), 
+                              url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0,0 L100,0 L100,100 L40,100 C65,70 70,30 0,0' fill='rgba(255,255,255,0.05)'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right;
+            background-size: cover;
+            z-index: 0;
+            opacity: 0.7;
+            mix-blend-mode: soft-light;
+        }
+
+        /* Sesuaikan posisi konten agar tidak tertutup vektor */
+        .identity-info {
+            position: relative;
+            z-index: 2;
+            width: 70%;  /* Memberi ruang untuk vektor */
+        }
+
+        /* Tambahkan efek hover pada vektor */
+        .identity-card:hover::before {
+            opacity: 0.9;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Sesuaikan untuk dark theme */
+        .dark-theme .identity-card::before {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0,0 L100,0 L100,100 L30,100 C55,70 60,30 0,0' fill='rgba(255,255,255,0.15)'/%3E%3C/svg%3E"),
+                                  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0,0 L100,0 L100,100 L40,100 C65,70 70,30 0,0' fill='rgba(255,255,255,0.08)'/%3E%3C/svg%3E");
+            mix-blend-mode: overlay;
+        }
+
+        /* Responsive adjustment untuk vektor */
+        @media (max-width: 768px) {
+            .identity-card::before {
+                width: 25%;  /* Vektor lebih kecil di mobile */
+            }
+            
+            .identity-info {
+                width: 85%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="identity-card fade-in">
+            <div class="identity-info">
+                <div class="identity-label">Nama</div>
+                <div class="identity-value">Abdul Rahman</div>
+                
+                <div class="identity-label">NIM</div>
+                <div class="identity-value">2110031806044</div>
+                
+                <div class="identity-label">Mata Kuliah</div>
+                <div class="identity-value">Big Data</div>
+                
+                <div class="identity-label">Kelas</div>
+                <div class="identity-value">Sistem Informasi (7B)</div>
+            </div>
+        </div>
+
+        <h1 class="fade-in">Alat-alat Visualisasi Data</h1>
+
+        <div class="tool-card fade-in">
+            <h2>1. Tableau</h2>
+            <p>Tableau adalah salah satu alat visualisasi data yang paling populer untuk analisis bisnis dan data.</p>
+            <div class="visualization-examples">
+                <a href="https://apandre.wordpress.com/2011/08/01/tableau-6-1/" target="_blank">
+                    <img src="https://apandre.wordpress.com/wp-content/uploads/2011/08/tableaudashboard2.jpg?w=510&h=315" alt="Contoh Dashboard Tableau" class="tool-image">
+                </a>
+            </div>
+            <p><em>Sumber gambar: <a href="https://apandre.wordpress.com/2011/08/01/tableau-6-1/" target="_blank" class="source-link">Andrei Pandre's Data Visualization Blog (2011)</a></em></p>
+            <p>Fitur utama berdasarkan Tableau :</p>
+            <ul>
+                <li>Dashboard interaktif dengan kemampuan touch, pinch, zoom</li>
+                <li>Incremental Data updates (terjadwal atau on demand)</li>
+                <li>Mendukung berbagai jenis visualisasi:</li>
+                <ul>
+                    <li>Bar charts dan Line charts</li>
+                    <li>Motion Charts dan Traces</li>
+                    <li>Geographic maps</li>
+                    <li>Data blending dari multiple sources</li>
+                </ul>
+                <li>Dukungan untuk "big data":</li>
+                <ul>
+                    <li>In-memory Data Engine untuk performa I/O lebih cepat</li>
+                    <li>Dapat memproses file lebih dari 2GB</li>
+                    <li>Parser teks yang lebih cepat tanpa batasan 4GB</li>
+                </ul>
+            </ul>
+            <p>Referensi:</p>
+            <ul>
+                <li><a href="https://apandre.wordpress.com/2011/08/01/tableau-6-1/" target="_blank" class="reference-link">
+                    <i class="fas fa-blog"></i>Pandre, A. (2011). Tableau 6.1 is released. Data Visualization Blog.</a></li>
+                <li><a href="https://doi.org/10.1016/j.dsm.2023.100054" target="_blank" class="reference-link">
+                    <i class="fas fa-file-alt"></i>Sharma, R., et al. (2023). Data visualization using Tableau: A systematic literature review.</a></li>
+            </ul>
+            <a href="https://www.tableau.com/" target="_blank" class="visit-website-link">
+                Kunjungi Website Tableau <i class="fas fa-external-link-alt"></i>
+            </a>
+        </div>
+
+        <div class="tool-card fade-in">
+            <h2>2. Power BI</h2>
+            <p>Power BI adalah alat visualisasi data dari Microsoft yang powerful untuk business intelligence.</p>
+            <div class="visualization-examples">
+                <a href="https://www.solusitraining.com/2022/05/why-your-organization-should-upskill-on-powerbi/" target="_blank">
+                    <img src="https://www.solusitraining.com/wp-content/uploads/2022/05/why-your-organization-should-upskill-on-powerbi-1_gmfjdb-684x385.png" alt="Contoh Dashboard Power BI" class="tool-image">
+                </a>
+            </div>
+            <p><em>Sumber gambar: <a href="https://www.solusitraining.com/2022/05/why-your-organization-should-upskill-on-powerbi/" target="_blank" class="source-link">Solusi Training - Why Your Organization Should Upskill on Power BI (2022)</a></em></p>
+            <p>Fitur utama Power BI:</p>
+            <ul>
+                <li>Integrasi dengan ekosistem Microsoft:</li>
+                <ul>
+                    <li>Excel, Azure, dan Office 365</li>
+                    <li>SharePoint dan Teams</li>
+                </ul>
+                <li>Kemampuan analisis data:</li>
+                <ul>
+                    <li>Data modeling dan transformasi</li>
+                    <li>DAX (Data Analysis Expressions)</li>
+                    <li>AI-powered analytics</li>
+                </ul>
+                <li>Visualisasi interaktif:</li>
+                <ul>
+                    <li>Custom visuals marketplace</li>
+                    <li>Real-time dashboards</li>
+                    <li>Cross-filtering dan drill-down</li>
+                </ul>
+            </ul>
+            <p>Referensi:</p>
+            <ul>
+                <li><a href="https://www.solusitraining.com/2022/05/why-your-organization-should-upskill-on-powerbi/" target="_blank" class="reference-link">
+                    <i class="fas fa-graduation-cap"></i>Solusi Training. (2022). Why Your Organization Should Upskill on Power BI.</a></li>
+                <li><a href="https://doi.org/10.1016/j.dsm.2023.100025" target="_blank" class="reference-link">
+                    <i class="fas fa-file-alt"></i>Singh, H., et al. (2023). Implementation of Power BI dashboard.</a></li>
+                <li><a href="https://powerbi.microsoft.com/blog/power-bi-february-2024-feature-summary/" target="_blank" class="reference-link">
+                    <i class="fas fa-newspaper"></i>Microsoft. (2024). Power BI Feature Summary February 2024.</a></li>
+            </ul>
+            <a href="https://powerbi.microsoft.com/" target="_blank" class="visit-website-link">
+                Kunjungi Website Power BI <i class="fas fa-external-link-alt"></i>
+            </a>
+        </div>
+
+        <div class="tool-card fade-in">
+            <h2>3. Google Charts</h2>
+            <p>Google Charts menyediakan berbagai jenis grafik dan chart yang dapat diintegrasikan ke dalam website.</p>
+            <div class="visualization-examples">
+                <a href="https://www.ezdigital.xyz/google-charts/" target="_blank">
+                    <img src="https://www.ezdigital.xyz/wp-content/uploads/2017/03/Charts-800x422.png" alt="Contoh Google Charts" class="tool-image">
+                </a>
+            </div>
+            <p><em>Sumber gambar: <a href="https://www.ezdigital.xyz/google-charts/" target="_blank" class="source-link">EZ Digital - Google Charts Tutorial (2017)</a></em></p>
+            <p>Fitur utama Google Charts:</p>
+            <ul>
+                <li>Kemudahan Implementasi:</li>
+                <ul>
+                    <li>Gratis dan mudah digunakan</li>
+                    <li>Dokumentasi lengkap</li>
+                    <li>Berbasis JavaScript</li>
+                </ul>
+                <li>Jenis Visualisasi:</li>
+                <ul>
+                    <li>Line dan Area Charts</li>
+                    <li>Bar dan Column Charts</li>
+                    <li>Pie dan Donut Charts</li>
+                    <li>Geo Charts dan Maps</li>
+                </ul>
+                <li>Fitur Interaktif:</li>
+                <ul>
+                    <li>Responsif di berbagai perangkat</li>
+                    <li>Animasi dan transisi halus</li>
+                    <li>Event handling untuk interaksi</li>
+                </ul>
+            </ul>
+            <p>Referensi:</p>
+            <ul>
+                <li><a href="https://www.ezdigital.xyz/google-charts/" target="_blank" class="reference-link">
+                    <i class="fas fa-book"></i>EZ Digital. (2017). Tutorial Google Charts: Membuat Grafik Interaktif.</a></li>
+                <li><a href="https://doi.org/10.1016/j.procs.2022.01.023" target="_blank" class="reference-link">
+                    <i class="fas fa-file-alt"></i>Kumar, S., et al. (2022). Comparative Analysis of Web-Based Data Visualization.</a></li>
+                <li><a href="https://developers.google.com/chart/interactive/docs/release_notes" target="_blank" class="reference-link">
+                    <i class="fas fa-code"></i>Google. (2024). Google Charts Release Notes.</a></li>
+            </ul>
+            <a href="https://developers.google.com/chart" target="_blank" class="visit-website-link">
+                Kunjungi Website Google Charts <i class="fas fa-external-link-alt"></i>
+            </a>
+        </div>
+
+        <div class="tool-card fade-in">
+            <h2>4. D3.js</h2>
+            <p>D3.js adalah library JavaScript untuk membuat visualisasi data yang sangat customizable.</p>
+            <div class="visualization-examples">
+                <a href="https://analyticsindiamag.com/data-visualization-using-d3-js/" target="_blank">
+                    <img src="https://analyticsindiamag.com/wp-content/uploads/2015/06/Visualization.jpg" alt="Contoh Visualisasi D3.js" class="tool-image">
+                </a>
+            </div>
+            <p><em>Sumber gambar: <a href="https://analyticsindiamag.com/data-visualization-using-d3-js/" target="_blank" class="source-link">Analytics India Magazine - Data Visualization using D3.js (2015)</a></em></p>
+            <p>Fitur utama D3.js:</p>
+            <ul>
+                <li>Kemampuan Visualisasi:</li>
+                <ul>
+                    <li>Fleksibilitas tinggi dalam kustomisasi</li>
+                    <li>Mendukung berbagai format SVG</li>
+                    <li>Visualisasi kompleks dan interaktif</li>
+                </ul>
+                <li>Manipulasi Data:</li>
+                <ul>
+                    <li>Pengolahan data dinamis</li>
+                    <li>Transformasi dan binding data</li>
+                    <li>Dukungan berbagai format data</li>
+                </ul>
+                <li>Interaktivitas:</li>
+                <ul>
+                    <li>Animasi yang smooth</li>
+                    <li>Event handling yang kuat</li>
+                    <li>Transisi dan efek visual</li>
+                </ul>
+            </ul>
+            <p>Referensi:</p>
+            <ul>
+                <li><a href="https://analyticsindiamag.com/data-visualization-using-d3-js/" target="_blank" class="reference-link">
+                    <i class="fas fa-newspaper"></i>Analytics India Magazine. (2015). Data Visualization using D3.js.</a></li>
+                <li><a href="https://doi.org/10.1016/j.procs.2023.01.045" target="_blank" class="reference-link">
+                    <i class="fas fa-file-alt"></i>Zhang, L., et al. (2023). Advanced Data Visualization with D3.js.</a></li>
+                <li><a href="https://d3js.org/getting-started" target="_blank" class="reference-link">
+                    <i class="fas fa-book-reader"></i>D3.js. (2024). Getting Started with D3.</a></li>
+            </ul>
+            <a href="https://d3js.org/" target="_blank" class="visit-website-link">
+                Kunjungi Website D3.js <i class="fas fa-external-link-alt"></i>
+            </a>
+        </div>
+    </div>
+    
+    <!-- Tambahkan tombol tema sebelum penutup body -->
+    <button class="theme-toggle" onclick="toggleTheme()" title="Ubah Tema">
+        🌓
+    </button>
+
+    <script>
+        // Fungsi untuk mengatur tema
+        function toggleTheme() {
+            const body = document.body;
+            if (body.classList.contains('dark-theme')) {
+                body.classList.remove('dark-theme');
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.classList.add('dark-theme');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // Cek tema yang tersimpan saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            // Jika tidak ada tema tersimpan atau tema adalah 'dark', gunakan dark theme
+            if (!savedTheme || savedTheme === 'dark') {
+                document.body.classList.add('dark-theme');
+            }
+        });
+
+        // Set dark theme secara default saat halaman pertama kali dimuat
+        if (!localStorage.getItem('theme')) {
+            localStorage.setItem('theme', 'dark');
+            document.body.classList.add('dark-theme');
+        }
+
+        // Script untuk efek scroll yang lebih modern
+        document.addEventListener('DOMContentLoaded', function() {
+            const observerOptions = {
+                root: null,
+                rootMargin: '-10%',
+                threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.intersectionRatio > 0) {
+                        entry.target.classList.add('visible');
+                        
+                        // Tambahkan class untuk animasi konten dalam card
+                        if (entry.target.classList.contains('tool-card')) {
+                            entry.target.querySelectorAll('*').forEach(element => {
+                                element.style.opacity = '0';
+                                void element.offsetWidth;
+                                element.style.opacity = '1';
+                            });
+                        }
+                    } else {
+                        entry.target.classList.remove('visible');
+                    }
+                });
+            }, observerOptions);
+
+            // Observe semua elemen dengan class fade-in
+            document.querySelectorAll('.fade-in').forEach(element => {
+                observer.observe(element);
+            });
+
+            // Tambahkan efek parallax saat scroll
+            window.addEventListener('scroll', () => {
+                const scrolled = window.pageYOffset;
+                document.querySelectorAll('.tool-card').forEach(card => {
+                    const speed = 0.05;
+                    const yPos = -(scrolled * speed);
+                    card.style.transform = `translateY(${yPos}px)`;
+                });
+            }, { passive: true });
+        });
+    </script>
+</body>
+</html>
