@@ -5,6 +5,13 @@ Repositori ini adalah pusat koleksi alat visualisasi data untuk menganalisis dan
 
 ---
 
+## 🌐 Preview Website
+
+Kunjungi Preview website proyek saya di:  
+👉 **[AbdulRahman-BigData-Alat-Alat-Visualisasi.io](https://m4sr.github.io/AbdulRahman-BigData-Alat-Alat-Visualisasi.io/)**  
+
+---
+
 ## 🎨 Fitur Utama
 
 - **Koleksi Alat Visualisasi**: Beragam alat visualisasi untuk memenuhi kebutuhan analisis data Anda.
@@ -25,8 +32,3 @@ Berikut beberapa alat visualisasi yang disorot dalam repositori ini:
 - **DLL**
 
 ---
-
-## 🌐 Website Demo
-
-Kunjungi website demo proyek kami di:  
-👉 **[AbdulRahman-BigData-Alat-Alat-Visualisasi.io](https://m4sr.github.io/AbdulRahman-BigData-Alat-Alat-Visualisasi.io/)**  
