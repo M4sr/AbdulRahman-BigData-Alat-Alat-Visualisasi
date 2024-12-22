@@ -652,7 +652,7 @@
         .parallax-header {
             background-image: url('bg.jpg');
             height: 500px;
-            background-attachment: fixed;
+            background-attachment: scroll;
             background-position: center;
             background-repeat: no-repeat;
             background-size: cover;
@@ -1542,6 +1542,12 @@
 
         // Panggil fungsi saat halaman dimuat
         document.addEventListener('DOMContentLoaded', updateScrollButtons);
+         // JavaScript for parallax effect on mobile
+        window.addEventListener('scroll', function() {
+            const parallax = document.querySelector('.parallax-header');
+            let scrollPosition = window.pageYOffset;
+            parallax.style.backgroundPositionY = (scrollPosition * 0.5) + 'px';
+        });
     </script>
 
     <footer style="background-color: #2c3e50; color: white; text-align: center; padding: 1rem 0; position: relative; bottom: 0; width: 100%; border-radius: 15px 15px 0 0;">
